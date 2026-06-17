@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PCA Pádel Club Arganda</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+</head>
+
+<body>
+
+    <!-- NAV -->
+    <nav class="nav">
+        <div class="logo">
+            <img src="img/logo.png">
+        </div>
+
+        <ul>
+            <li><a href="#inicio">Inicio</a></li>
+            <li><a href="#club">Club</a></li>
+            <li><a href="#equipos">Equipos</a></li>
+            <li><a href="#jugadores">Jugadores</a></li>
+            <li><a href="#instagram">Instagram</a></li>
+            <li><a href="#instalaciones">Instalaciones</a></li>
+            <li><a href="#contacto">Contacto</a></li>
+        </ul>
+    </nav>
+
+    <!-- HERO -->
+    <section id="inicio" class="hero">
+
+        <div class="hero-slider">
+
+            <div class="slide active" style="background-image:url('img/hero/1.jpg')"></div>
+            <div class="slide" style="background-image:url('img/instalaciones/1.jpg')"></div>
+            <div class="slide" style="background-image:url('img/instalaciones/2.jpg')"></div>
+            <div class="slide" style="background-image:url('img/instalaciones/3.jpg')"></div>
+
+        </div>
+
+        <div class="overlay"></div>
+
+        <div class="hero-content" data-aos="fade-up">
+
+            <img src="img/logo.png" class="hero-logo">
+
+            <h1>PCA Pádel Club</h1>
+
+            <p class="subtitle">
+                Más de 10 años compitiendo al máximo nivel en Arganda del Rey
+            </p>
+
+            <div class="cta">
+                <a href="#equipos">Ver Equipos</a>
+                <a href="#instagram" class="ghost">Actualidad</a>
+            </div>
+
+        </div>
+
+    </section>
+    <!-- CLUB -->
+    <section id="club" class="section">
+
+        <h2 data-aos="fade-up">Nuestra Historia</h2>
+
+        <div class="timeline">
+
+            <div class="t">2013<br><span>Fundación del club</span></div>
+            <div class="t">2016<br><span>Crecimiento competitivo</span></div>
+            <div class="t">2020<br><span>Consolidación en Madrid</span></div>
+            <div class="t">2025<br><span>Club referente</span></div>
+
+        </div>
+
+    </section>
+
+    <!-- EQUIPOS -->
+    <section id="equipos" class="section dark">
+
+        <h2 data-aos="fade-up">Equipos</h2>
+
+        <div class="grid">
+
+            <div class="card">Masculino A</div>
+            <div class="card">Masculino B</div>
+            <div class="card">Femenino A</div>
+            <div class="card">Veteranos</div>
+
+        </div>
+
+    </section>
+
+    <!-- JUGADORES -->
+    <section id="jugadores" class="section">
+
+        <h2 data-aos="fade-up">Jugadores</h2>
+
+        <div class="players">
+
+            <div class="player">
+                <img src="img/jugadores/jugador1.jpg">
+                <h3>Carlos</h3>
+                <span>OVR 89</span>
+            </div>
+
+            <div class="player">
+                <img src="img/jugadores/jugador2.jpg">
+                <h3>David</h3>
+                <span>OVR 87</span>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- INSTAGRAM -->
+    <section id="instagram" class="section dark">
+
+        <h2 data-aos="fade-up">Instagram PCA</h2>
+
+        <p class="center">
+            Últimos resultados, torneos y vida del club
+        </p>
+
+        <div class="insta">
+
+            <div class="post"></div>
+            <div class="post"></div>
+            <div class="post"></div>
+            <div class="post"></div>
+            <div class="post"></div>
+            <div class="post"></div>
+
+        </div>
+
+        <a class="btn" href="https://www.instagram.com/padelclubarganda_/" target="_blank">
+Ver Instagram
+</a>
+
+    </section>
+
+    <!-- INSTALACIONES -->
+    <section id="instalaciones" class="section">
+
+        <h2 data-aos="fade-up">Instalaciones</h2>
+
+        <div class="instalaciones-grid">
+
+            <div class="inst-card" data-aos="zoom-in">
+                <img src="img/instalaciones/1.jpg">
+                <div class="inst-overlay">
+                    <h3>Pistas principales</h3>
+                </div>
+            </div>
+
+            <div class="inst-card" data-aos="zoom-in">
+                <img src="img/instalaciones/2.jpg">
+                <div class="inst-overlay">
+                    <h3>Zona de entrenamiento</h3>
+                </div>
+            </div>
+
+            <div class="inst-card" data-aos="zoom-in">
+                <img src="img/instalaciones/3.jpg">
+                <div class="inst-overlay">
+                    <h3>Club social</h3>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- MAPA -->
+    <section class="section dark">
+
+        <h2>¿Dónde estamos?</h2>
+
+        <div id="map"></div>
+
+    </section>
+
+    <!-- CONTACTO -->
+    <section id="contacto" class="section">
+
+        <h2>Contacto</h2>
+
+        <form>
+            <input placeholder="Nombre">
+            <input placeholder="Email">
+            <textarea placeholder="Mensaje"></textarea>
+            <button class="btn-send">
+                <span>Enviar mensaje</span>
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </form>
+
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+
+        <div class="sponsors">
+            <img src="img/sponsors/1.png">
+            <img src="img/sponsors/2.png">
+            <img src="img/sponsors/3.png">
+            <img src="img/sponsors/4.png">
+        </div>
+
+        <p>© 2025 PCA Pádel Club</p>
+
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="js/main.js"></script>
+
+</body>
+
+</html>
