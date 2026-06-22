@@ -1,115 +1,280 @@
 /* =========================
+   PCA PÁDEL CLUB - MAIN JS
+========================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+    initAOS();
+    initMobileMenu();
+    initHeroSlider();
+    initCounters();
+    initMap();
+    initSmoothScroll();
+    initNavScroll();
+    initContactForm();
+});
+
+
+/* =========================
    AOS ANIMATIONS
 ========================= */
 
-AOS.init({
-    duration: 1000,
-    once: true
-});
-
-
-/* =========================
-   COUNTERS ANIMADOS HERO
-========================= */
-
-const counters = document.querySelectorAll(".counter");
-
-counters.forEach(counter => {
-
-    let target = +counter.getAttribute("data-target");
-    let count = 0;
-    let speed = target / 80;
-
-    function update() {
-
-        if (count < target) {
-            count += speed;
-            counter.innerText = Math.floor(count);
-            requestAnimationFrame(update);
-        } else {
-            counter.innerText = target;
-        }
+function initAOS() {
+    if (typeof AOS !== "undefined") {
+        AOS.init({
+            duration: 900,
+            once: true,
+            offset: 90,
+            easing: "ease-out-cubic"
+        });
     }
-
-    update();
-});
-
-
-/* =========================
-   HERO SLIDER (CINEMÁTICO)
-========================= */
-
-const slides = document.querySelectorAll(".slide");
-
-let currentSlide = 0;
-
-function changeSlide() {
-
-    if (!slides.length) return;
-
-    slides[currentSlide].classList.remove("active");
-
-    currentSlide = (currentSlide + 1) % slides.length;
-
-    slides[currentSlide].classList.add("active");
 }
 
-setInterval(changeSlide, 5000);
+
+/* =========================
+   MENÚ MÓVIL
+========================= */
+
+function initMobileMenu() {
+    const menuToggle = document.querySelector(".menu-toggle");
+    const navLinks = document.querySelector(".nav-links");
+    const body = document.body;
+
+    if (!menuToggle || !navLinks) return;
+
+    menuToggle.addEventListener("click", () => {
+        const isOpen = navLinks.classList.toggle("active");
+
+        menuToggle.setAttribute("aria-expanded", String(isOpen));
+        body.classList.toggle("menu-open", isOpen);
+        menuToggle.classList.toggle("active", isOpen);
+    });
+
+    navLinks.querySelectorAll("a").forEach(link => {
+        link.addEventListener("click", () => {
+            navLinks.classList.remove("active");
+            body.classList.remove("menu-open");
+            menuToggle.classList.remove("active");
+            menuToggle.setAttribute("aria-expanded", "false");
+        });
+    });
+
+    window.addEventListener("resize", () => {
+        if (window.innerWidth > 980) {
+            navLinks.classList.remove("active");
+            body.classList.remove("menu-open");
+            menuToggle.classList.remove("active");
+            menuToggle.setAttribute("aria-expanded", "false");
+        }
+    });
+}
 
 
 /* =========================
-   MAPA INTERACTIVO (LEAFLET)
+   HERO SLIDER
 ========================= */
 
-const map = L.map('map').setView([40.3008, -3.4380], 15);
+function initHeroSlider() {
+    const slides = document.querySelectorAll(".slide");
+    if (!slides.length) return;
 
-// mapa base
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: ''
-}).addTo(map);
+    let currentSlide = 0;
 
-// marcador PCA
-L.marker([40.3008, -3.4380])
-    .addTo(map)
-    .bindPopup("PCA Pádel Club Arganda")
-    .openPopup();
+    setInterval(() => {
+        slides[currentSlide].classList.remove("active");
+
+        currentSlide = (currentSlide + 1) % slides.length;
+
+        slides[currentSlide].classList.add("active");
+    }, 5200);
+}
 
 
 /* =========================
-   SCROLL SUAVE EXTRA (NAV FIX)
+   CONTADORES ANIMADOS
 ========================= */
 
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+function initCounters() {
+    const counters = document.querySelectorAll(".counter");
+    if (!counters.length) return;
 
-    anchor.addEventListener("click", function(e) {
+    const animateCounter = counter => {
+        const target = Number(counter.dataset.target || 0);
+        const duration = 1400;
+        const startTime = performance.now();
 
-        e.preventDefault();
+        const update = currentTime => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const easedProgress = 1 - Math.pow(1 - progress, 3);
+            const value = Math.floor(easedProgress * target);
 
-        const target = document.querySelector(this.getAttribute("href"));
+            counter.textContent = value;
 
-        if (target) {
+            if (progress < 1) {
+                requestAnimationFrame(update);
+            } else {
+                counter.textContent = target;
+            }
+        };
+
+        requestAnimationFrame(update);
+    };
+
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+
+            const counter = entry.target;
+
+            if (counter.dataset.animated === "true") return;
+
+            counter.dataset.animated = "true";
+            animateCounter(counter);
+            observer.unobserve(counter);
+        });
+    }, {
+        threshold: 0.45
+    });
+
+    counters.forEach(counter => observer.observe(counter));
+}
+
+
+/* =========================
+   MAPA LEAFLET
+========================= */
+
+function initMap() {
+    const mapElement = document.getElementById("map");
+
+    if (!mapElement || typeof L === "undefined") return;
+
+    const coords = [40.3008, -3.4380];
+
+    const map = L.map(mapElement, {
+        scrollWheelZoom: false
+    }).setView(coords, 15);
+
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: "&copy; OpenStreetMap"
+    }).addTo(map);
+
+    L.marker(coords)
+        .addTo(map)
+        .bindPopup("<strong>PCA Pádel Club Arganda</strong><br>Instalaciones municipales de Arganda del Rey")
+        .openPopup();
+}
+
+
+/* =========================
+   SCROLL SUAVE
+========================= */
+
+function initSmoothScroll() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", event => {
+            const href = anchor.getAttribute("href");
+
+            if (!href || href === "#") return;
+
+            const target = document.querySelector(href);
+
+            if (!target) return;
+
+            event.preventDefault();
+
             target.scrollIntoView({
                 behavior: "smooth",
                 block: "start"
             });
-        }
+        });
     });
-});
+}
 
 
 /* =========================
-   NAV BACKGROUND ON SCROLL
+   NAV AL HACER SCROLL
 ========================= */
 
-const nav = document.querySelector(".nav");
+function initNavScroll() {
 
-window.addEventListener("scroll", () => {
+    const nav = document.querySelector(".nav");
 
-    if (window.scrollY > 80) {
-        nav.style.background = "rgba(0,0,0,0.85)";
-        nav.style.backdropFilter = "blur(12px)";
-    } else {
-        nav.style.background = "rgba(0,0,0,0.5)";
-    }
-});
+    if (!nav) return;
+
+    const sections = document.querySelectorAll("section[id]");
+    const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+
+    const updateNav = () => {
+
+        nav.classList.toggle("scrolled", window.scrollY > 80);
+
+        let currentSection = "";
+
+        sections.forEach(section => {
+
+            const sectionTop = section.offsetTop - 180;
+
+            if (window.scrollY >= sectionTop) {
+                currentSection = section.getAttribute("id");
+            }
+
+        });
+
+        navLinks.forEach(link => {
+
+            link.classList.remove("active");
+
+            if (link.getAttribute("href") === `#${currentSection}`) {
+                link.classList.add("active");
+            }
+
+        });
+
+    };
+
+    updateNav();
+
+    window.addEventListener("scroll", updateNav, {
+        passive: true
+    });
+
+}
+
+
+/* =========================
+   FORMULARIO DE CONTACTO
+========================= */
+
+function initContactForm() {
+    const form = document.getElementById("contactForm");
+    if (!form) return;
+
+    form.addEventListener("submit", event => {
+        event.preventDefault();
+
+        const formData = new FormData(form);
+
+        const name = String(formData.get("name") || "").trim();
+        const email = String(formData.get("email") || "").trim();
+        const message = String(formData.get("message") || "").trim();
+
+        if (!name || !email || !message) {
+            alert("Por favor, completa todos los campos.");
+            return;
+        }
+
+        const subject = encodeURIComponent(`Contacto web PCA - ${name}`);
+        const body = encodeURIComponent(
+            `Nombre: ${name}\n` +
+            `Email: ${email}\n\n` +
+            `Mensaje:\n${message}`
+        );
+
+        // Cambia este correo por el real del club
+        const clubEmail = "padelclubarganda@gmail.com";
+
+        window.location.href = `mailto:${clubEmail}?subject=${subject}&body=${body}`;
+    });
+}
